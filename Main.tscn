@@ -1,0 +1,135 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scripts/Main.gd" type="Script" id=2]
+[ext_resource path="res://Enemy.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scripts/ScoreLabel.gd" type="Script" id=4]
+[ext_resource path="res://fonts/Montserrat-Medium.ttf" type="DynamicFontData" id=5]
+
+[sub_resource type="BoxShape" id=1]
+extents = Vector3( 30, 1, 30 )
+
+[sub_resource type="CubeMesh" id=2]
+size = Vector3( 60, 2, 60 )
+
+[sub_resource type="SpatialMaterial" id=3]
+albedo_color = Color( 0.929412, 0.478431, 0.156863, 1 )
+
+[sub_resource type="CylinderMesh" id=4]
+material = SubResource( 3 )
+
+[sub_resource type="Curve3D" id=5]
+_data = {
+"points": PoolVector3Array( 0, 0, 0, 0, 0, 0, -14.5294, 0, -9.54959, 0, 0, 0, 0, 0, 0, 16.4042, 0, -9.90111, 0, 0, 0, 0, 0, 0, 16.6738, 0, 19.4755, 0, 0, 0, 0, 0, 0, -14.2137, 0, 19.4755, 0, 0, 0, 0, 0, 0, -14.2137, 0, 19.3389, 0, 0, 0, 0, 0, 0, -14.5294, 0, -9.54959 ),
+"tilts": PoolRealArray( 0, 0, 0, 0, 0, 0 )
+}
+
+[sub_resource type="DynamicFont" id=6]
+size = 22
+font_data = ExtResource( 5 )
+
+[sub_resource type="Theme" id=7]
+default_font = SubResource( 6 )
+
+[node name="Main" type="Node"]
+script = ExtResource( 2 )
+mob_scene = ExtResource( 3 )
+
+[node name="Ground" type="StaticBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.0219, 0 )
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape" type="CollisionShape" parent="Ground"]
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Ground"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.109862, 0.15941 )
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 1, 0, 0, 0, -0.0119203, 0.999929, 0, -0.999929, -0.0119203, 0, 17.1429, 0 )
+shadow_enabled = true
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+
+[node name="CameraPivot" type="Position3D" parent="."]
+transform = Transform( -0.932867, 0.00811927, -0.360129, -0.331734, 0.370291, 0.867662, 0.140397, 0.92888, -0.342739, -0.0809693, 0.92556, 0.0707808 )
+
+[node name="Camera" type="Camera" parent="CameraPivot"]
+transform = Transform( -0.933444, -0.263313, -0.243613, -0.0290113, -0.621477, 0.782895, -0.357547, 0.737857, 0.572475, -0.163137, 0.224574, 3.00324 )
+projection = 1
+fov = 128.055
+size = 18.6874
+
+[node name="Cylinders" type="Spatial" parent="."]
+
+[node name="MeshInstance" type="MeshInstance" parent="Cylinders"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -14.0741, 0, -9.38463 )
+mesh = SubResource( 4 )
+material/0 = null
+
+[node name="MeshInstance2" type="MeshInstance" parent="Cylinders"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 16.1634, 0, -9.38463 )
+mesh = SubResource( 4 )
+material/0 = null
+
+[node name="MeshInstance3" type="MeshInstance" parent="Cylinders"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -14.0741, 0, 19.5057 )
+mesh = SubResource( 4 )
+material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="Cylinders"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 16.6657, 0, 19.346 )
+mesh = SubResource( 4 )
+material/0 = null
+
+[node name="SpawnPath" type="Path" parent="."]
+curve = SubResource( 5 )
+
+[node name="SpawnLocation" type="PathFollow" parent="SpawnPath"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -14.5294, 0, -9.54959 )
+
+[node name="MobTimer" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+
+[node name="UserInterface" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = SubResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScoreLabel" type="Label" parent="UserInterface"]
+margin_right = 40.0
+margin_bottom = 14.0
+rect_rotation = 0.281778
+custom_colors/font_color = Color( 0.2, 0.184314, 0.215686, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+text = "Score: 0"
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Retry" type="ColorRect" parent="UserInterface"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.890196, 0.133333, 0.133333, 1 )
+
+[node name="Label" type="Label" parent="UserInterface/Retry"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -119.5
+margin_top = -14.0
+margin_right = 119.5
+margin_bottom = 14.0
+text = "Press Enter to Retry :)"
+
+[connection signal="hit" from="Player" to="." method="_on_Player_hit"]
+[connection signal="timeout" from="MobTimer" to="." method="_on_MobTimer_timeout"]
